@@ -46,6 +46,7 @@ async function createServer(user, { name, runtime, mode, token, platform }, { fo
   if (!force && store.bots.filter((b) => b.userId === user.id).length >= cap) throw new HttpError(403, `وصلت للحد الأقصى (${cap} سيرفرات)`);
   if (store.bots.some((b) => b.userId === user.id && b.name.toLowerCase() === n.toLowerCase())) throw new HttpError(409, 'عنده سيرفر بنفس الاسم');
   const wa = platform === 'whatsapp';
+  if (rt === 'php') require('./runtimes').ensurePhp().catch(() => {});
   let username = '';
   if (token && !wa) username = (await checkToken(token)).username;
   const bot = {
