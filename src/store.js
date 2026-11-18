@@ -20,12 +20,18 @@ function save() {
   clearTimeout(timer);
   timer = setTimeout(flush, 100);
 }
+let warned = false;
 function flush() {
   clearTimeout(timer);
   const tmp = `${file}.tmp`;
-  fs.writeFileSync(tmp, JSON.stringify(db), { mode: 0o600 });
-  try { if (fs.existsSync(file)) fs.copyFileSync(file, `${file}.bak`); } catch { /* تمام */ }
-  fs.renameSync(tmp, file);
+  try {
+    fs.writeFileSync(tmp, JSON.stringify(db), { mode: 0o600 });
+    try { if (fs.existsSync(file)) fs.copyFileSync(file, `${file}.bak`); } catch { /* تمام */ }
+    fs.renameSync(tmp, file);
+  } catch (e) {
+    // ما نوقعش الموقع لو التخزين مش متاح. البيانات تفضل في الذاكرة لحد ما يتصلّح
+    if (!warned) { warned = true; console.error(`⚠️ تعذّر الحفظ في ${file}: ${e.message}. الحسابات مش هتفضل بعد إعادة التشغيل! اتأكد من صلاحيات DATA_DIR والـ Volume.`); }
+  }
 }
 process.on('exit', () => { try { flush(); } catch { /* تمام */ } });
 
