@@ -1,0 +1,12 @@
+{
+  "name": "vex-hosting",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Host Telegram bots written in PHP, Python or Node.js (no dependencies)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node test/e2e.js"
+  },
+  "engines": { "node": ">=18" }
+}
