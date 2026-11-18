@@ -48,7 +48,8 @@ server.listen(config.port, () => {
   ensureAdmin().catch((e) => console.error('admin:', e.message));
   manager.resumeAll(store.bots);
   control.start();
-  runtimes.ensurePhp().catch(() => {});
+  // PHP بيتنزّل بس لو فيه سيرفر PHP (أو لما تعمل واحد)، عشان نوفّر الرام والشبكة وقت التشغيل
+  if (store.bots.some((b) => b.runtime === 'php')) runtimes.ensurePhp().catch(() => {});
 });
 
 let closing = false;
