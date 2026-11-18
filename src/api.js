@@ -60,7 +60,11 @@ async function ensureAdmin() {
 }
 
 // ---------------- عام ----------------
-router.add('GET', '/api/health', (_req, res) => json(res, 200, { ok: true }));
+const bootedAt = Date.now();
+router.add('GET', '/api/health', (_req, res) => json(res, 200, {
+  ok: true, uptimeSec: Math.round((Date.now() - bootedAt) / 1000), users: store.users.length, bots: store.bots.length,
+  storage: (() => { try { fs.accessSync(config.dataDir, fs.constants.W_OK); return 'writable'; } catch { return 'READ-ONLY'; } })()
+}));
 
 router.add('GET', '/api/config', (_req, res) => {
   const r = runtimes.detect();
